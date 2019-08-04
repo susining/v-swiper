@@ -1,22 +1,38 @@
 {
-  "name": "vue-swiper",
+  "name": "v-swiper",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Swiper component for Vue 2.x",
+  "main": "dist/v-swiper.umd.js",
+  "module": "dist/v-swiper.esm.js",
+  "unpkg": "dist/v-swiper.min.js",
+  "browser": {
+    "./sfc": "src/v-swiper.vue"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build:umd & npm run build:esm & npm run build:unpkg",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/v-swiper.umd.js",
+    "build:esm": "rollup --config build/rollup.config.js --format esm --file dist/v-swiper.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/v-swiper.min.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sunchaserkuafu/vue-swiper.git"
   },
-  "author": "",
+  "author": "sunchaserkuafu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sunchaserkuafu/vue-swiper/issues"
+    "url": "https://github.com/sunchaserkuafu/v-swiper/issues"
   },
-  "homepage": "https://github.com/sunchaserkuafu/vue-swiper#readme",
+  "homepage": "https://github.com/sunchaserkuafu/v-swiper#readme",
   "dependencies": {
     "swiper": "^4.5.0"
+  },
+  "devDependencies": {
+    "rollup": "^1.17.0",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-vue": "^5.0.1",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
   }
 }

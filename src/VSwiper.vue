@@ -1,5 +1,5 @@
 <template>
-  <div class="component-swiper">
+  <div class="v-swiper">
     <div ref="swiper" class="swiper-container">
       <div class="swiper-wrapper">
         <slot />
@@ -11,12 +11,10 @@
 </template>
 
 <script>
-import Swiper from "swiper/dist/js/swiper.min.js";
-import "swiper/dist/css/swiper.css";
+import Swiper from "swiper";
 
-// as of swiper 4.0.7
 // http://idangero.us/swiper/api/#events
-const DEFAULT_EVENTS = [
+const SWIPER_EVENTS = [
   "beforeDestroy",
   "slideChange",
   "slideChangeTransitionStart",
@@ -50,6 +48,10 @@ export default {
     options: {
       type: Object,
       default: () => ({})
+    },
+    manulCreate: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -58,23 +60,32 @@ export default {
     };
   },
   mounted() {
-    this.createSiwper();
+    if (!this.manulCreate) {
+      this.createSiwper();
+    }
   },
   updated() {
     this.update();
   },
   beforeDestory() {
     this.$nextTick(() => {
-      this.destorySwiper();
+      this.destroy();
     });
   },
   methods: {
-    createSiwper() {
+    create() {
       if (!this.swiper) {
         this.swiper = new Swiper(this.$refs.swiper, this.options);
+        this.bindEvents();
       }
     },
-    updateSwiper() {
+    destroy() {
+      if (this.swiper) {
+        this.swiper.destroy && this.swiper.destroy();
+        delete this.swiper;
+      }
+    },
+    update() {
       if (this.swiper) {
         this.swiper.update && this.swiper.update();
         this.swiper.navigation && this.swiper.navigation.update();
@@ -82,22 +93,13 @@ export default {
         this.swiper.pagination && this.swiper.pagination.update();
       }
     },
-    destorySwiper() {
-      if (this.swiper) {
-        this.swiper.destroy && this.swiper.destroy();
-        delete this.swiper;
-      }
-    },
-    update() {
-      this.updateSwiper();
-    },
     bindEvents() {
       const self = this;
-      DEFAULT_EVENTS.forEach(event => {
+      SWIPER_EVENTS.forEach(event => {
         self.swiper.on(event, function() {
           self.$emit(event, ...arguments);
           self.$emit(
-            eventName.replace(/([A-Z])/g, "-$1").toLowerCase(),
+            event.replace(/([A-Z])/g, "-$1").toLowerCase(),
             ...arguments
           );
         });
@@ -107,8 +109,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.component-swiper {
+<style>
+.v-swiper {
   position: relative;
 }
 </style>
